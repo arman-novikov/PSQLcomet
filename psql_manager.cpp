@@ -52,25 +52,43 @@ int PSQLmanager::openDB(const char *filename)
        std::cerr << e.what() << std::endl;
        return -ECONNREFUSED;
     }
-
-    return 0;
 }
 /*!
 * \brief a draft function to implement the request's result transmitting
 * \param string containing request
-* \param string containing result
-* \return int == 0 if ok else error code
+* \return sql result
+* \todo extract request_token composition
 */
-int PSQLmanager::SQLfunc(const std::string& request, std::string& result)
+std::string PSQLmanager::SQLfunc(const std::string& request)
 {
-    return 0;
+    std::string res;
+    if (!postgresConnection)
+        return "ECONNREFUSED";
+
+    std::string request_token = "SELECT data FROM ";
+    request_token += request;
+    request_token += " WHERE id = ( SELECT MAX(id) FROM ";
+    request_token += request;
+    request_token += ")";
+
+    try {
+        pqxx::nontransaction N(*postgresConnection);
+        pqxx::result R( N.exec(request_token) );
+        N.commit();
+        res = R[0][0].as<std::string>();
+    } catch (const pqxx::pqxx_exception& ex) {
+        std::cerr << ex.base().what() << std::endl;
+        res = "EINVAL";
+    }
+
+    return res;
 }
 /*!
 * \brief a draft function to implement transactioanal requests
 * \param string containing request
 * \return int == 0 if ok else error code
 */
-int PSQLmanager::SQLproc(const std::string& request)
+int PSQLmanager::SQLproc(const std::string&)
 {
     return 0;
 }

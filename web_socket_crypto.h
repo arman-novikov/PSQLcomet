@@ -1,6 +1,4 @@
-#ifndef WEBSOCKETCRYPTO_H_INCLUDED
-#define WEBSOCKETCRYPTO_H_INCLUDED
-
+#pragma once
 #include <string>
 #include <byteswap.h>
 
@@ -22,7 +20,4 @@
 *   waits for the valid Sec-WebSocket-Accept from server.
 *   Processes params using sha1, than processes the result using base64
 */
-
 std::string get_webSocket_accept(const std::string &sec_webSocket_key);
-
-#endif // WEBSOCKETCRYPTO_H_INCLUDED

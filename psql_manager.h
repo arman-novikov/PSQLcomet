@@ -1,16 +1,15 @@
-#ifndef PSQL_MANAGER_H_INCLUDED
-#define PSQL_MANAGER_H_INCLUDED
+#pragma once
 
 #include <memory>
 #include <array>
 #include <string>
 #include <pqxx/pqxx>
 
-const unsigned short dbopenParamsNum = 3;
-const char paramsFileName[] = "conf.ini";
-const unsigned int dbnamePos = 0;
-const unsigned int usernamePos = 1;
-const unsigned int passwordPos = 2;
+constexpr unsigned short dbopenParamsNum = 3;
+constexpr char paramsFileName[] = "conf.ini";
+constexpr unsigned int dbnamePos = 0;
+constexpr unsigned int usernamePos = 1;
+constexpr unsigned int passwordPos = 2;
 
 /*!
 *   \class PSQLmanager
@@ -20,13 +19,11 @@ class PSQLmanager
 {
 public:
     PSQLmanager();
-    ~PSQLmanager();
-    int openDB(const char *); ///< requests a new Postgres connetion from Postmaster
-    int SQLproc(const std::string&); ///< draft
-    int SQLfunc(const std::string&, std::string&); ///< draft
+    virtual ~PSQLmanager();
+    int openDB(const char*);                                ///< requests a new Postgres connetion from Postmaster
+    int SQLproc(const std::string&);                        ///< draft
+    std::string SQLfunc(const std::string&);                ///< draft
 protected:
-    std::unique_ptr<pqxx::connection> postgresConnection; ///< contains a postgres connection
+    std::unique_ptr<pqxx::connection> postgresConnection;   ///< contains a postgres connection
     std::array <std::string, dbopenParamsNum> dbopenParams; ///< neccessary to open a postgres connection
 };
-
-#endif // PSQL_MANAGER_H_INCLUDED
